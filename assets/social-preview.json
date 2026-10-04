@@ -1,0 +1,40 @@
+{
+  "template": "legends-social-v1",
+  "title": "legends-cloudflare",
+  "subtitle": "cloudflare dns automation with reviewed changes and a reusable knowledge vault",
+  "size": [
+    1280,
+    640
+  ],
+  "title_px": 64,
+  "subtitle_px": 36,
+  "safe_margin_px": 80,
+  "lines": [
+    "cloudflare dns automation with reviewed",
+    "changes and a reusable knowledge vault"
+  ],
+  "text_bounds": [
+    [
+      80,
+      176,
+      800,
+      239
+    ],
+    [
+      80,
+      324,
+      938,
+      360
+    ],
+    [
+      80,
+      372,
+      916,
+      409
+    ]
+  ],
+  "font_sha256": "3769f0f76477a7d9e2e6cb40422dedacb56c9ab1a6f7beee89b2b9ba6b8091ee",
+  "image_sha256": "9b04515ef4469b3fcf8d3286945ef2db4a883bee1602a478517e961e6f1a4ef8",
+  "bytes": 25037,
+  "upload_status": "not_attempted"
+}

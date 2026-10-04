@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "legends-cloudflare"
+version = "0.1.0"
+description = "Cloudflare DNS automation with reviewed change plans, readback checks, and a source-cited knowledge vault."
+requires-python = ">=3.10"
+license = "MIT"
+authors = [{name = "Benjamin Samar / cto-legends"}]
+dependencies = []
+readme = "README.md"
+
+[project.scripts]
+legends-cloudflare = "legends_cloudflare.cli:main"
+
+[project.urls]
+Repository = "https://github.com/avalonreset/legends-cloudflare"
+Issues = "https://github.com/avalonreset/legends-cloudflare/issues"
+
+[tool.setuptools.packages.find]
+include = ["legends_cloudflare*"]

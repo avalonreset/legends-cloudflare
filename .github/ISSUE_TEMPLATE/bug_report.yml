@@ -1,0 +1,15 @@
+name: Bug report
+description: Report a reproducible problem without private DNS data.
+body:
+  - type: textarea
+    attributes:
+      label: What happened?
+      description: Include the version, OS, Python version and sanitized command. Never include tokens or private record contents.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Expected result and reproduction
+      description: Use example.com and synthetic records where possible. State whether a write was attempted.
+    validations:
+      required: true

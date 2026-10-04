@@ -1,0 +1,10 @@
+legends-cloudflare
+Copyright (c) 2026 Benjamin Samar
+
+Independent community tooling built on Cloudflare's API and documentation.
+Cloudflare names and trademarks belong to their respective owners.
+This project is not affiliated with or endorsed by Cloudflare.
+
+The central cto-legends router recipe is redistributed under the MIT license,
+copyright Benjamin Samar. Repository presentation uses legends-github renderers.
+See THIRD_PARTY_NOTICES.md for source links and detailed attribution.
