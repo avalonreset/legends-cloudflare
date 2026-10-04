@@ -9,7 +9,7 @@
 
 **Cloudflare DNS automation with reviewed changes and a reusable knowledge vault.**
 
-Give your agent a repeatable way to inspect Cloudflare zones, preview DNS changes, apply an explicitly confirmed change, and check the result. Keep the reasoning and operating history in Markdown that works with Obsidian and [legends-empire](https://github.com/avalonreset/legends-empire).
+Use this Python **Cloudflare DNS CLI** with your agent to inspect zones and DNS records, preview changes, apply an explicitly confirmed change, and check the result. Keep the reasoning and operating history in Markdown that works with Obsidian and [legends-empire](https://github.com/avalonreset/legends-empire).
 
 This is an independent community project built on the official Cloudflare API. Cloudflare provides the DNS platform. This module adds a bounded workflow, tested checks, and source-cited runbooks. It is not affiliated with or endorsed by Cloudflare.
 
@@ -29,7 +29,7 @@ An agent can write an API request. The recurring work is deciding which zone and
 
 These checks reduce specific failure modes; they do not make DNS changes risk-free. API readback confirms provider state, not worldwide DNS propagation or application health.
 
-## Install and inspect
+## Install the Cloudflare DNS CLI
 
 Python 3.10 or newer. No runtime dependencies or MCP server.
 
@@ -53,7 +53,7 @@ legends-cloudflare records --zone example.com
 
 Live doctor checks zone listing only. It does not prove DNS read or edit permissions. Record output can contain private DNS content; keep it outside public repositories and managed installations.
 
-## Preview a DNS change
+## Preview and update Cloudflare DNS records
 
 ```sh
 legends-cloudflare upsert --zone example.com --name www --type A --content 192.0.2.10
@@ -109,6 +109,8 @@ A module release is followed by a verified catalog entry with an immutable commi
 ## Boundaries and verification
 
 This release does not transfer registrar ownership, change registrar nameservers, manage Workers, create tunnels, or automate bulk DNS imports. Use the linked [migration runbook](wiki/migration.md) and official provider tools for those tasks.
+
+It calls the Cloudflare DNS API for this bounded workflow. It is not Cloudflare's Agents SDK, an AI-agent hosting platform, or a Cloudflare MCP server.
 
 ```sh
 python -m unittest discover -s tests -v

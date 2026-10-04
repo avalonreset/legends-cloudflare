@@ -1,6 +1,6 @@
 # Release readiness
 
-Candidate: `legends-cloudflare` 0.1.0. Review date: 2026-10-03.
+Candidate: `legends-cloudflare` 0.1.0. Review date: 2026-10-04.
 
 Status: local release candidate prepared; not published or admitted to the public catalog.
 
@@ -14,10 +14,10 @@ Status: local release candidate prepared; not published or admitted to the publi
 | Clean wheel and source installation | Passed isolated wheel and source-distribution installs with offline doctor; archive contents checked |
 | Router recipe and isolated catalog integration | Passed real manager installation/probes against a local archive fixture; intent routing, legacy alias and handoff passed; router unchanged; admission helper preserves unrelated catalog entries |
 | Live read smoke | Passed zone listing, zone-by-ID metadata and one zone's DNS listing; no writes sent; private inventory not published |
-| Live write round trip | Not run; requires an authorized disposable zone and record |
+| Live write round trip | Passed authorized disposable TXT creation, exact-ID update, TTL preservation, API readback and exact-ID deletion; final inventory confirmed zero test records |
 | Linux/macOS/Windows hosted CI | Workflow prepared; not executed on GitHub |
 | GitHub presentation audit and metadata | Portable verify, audit, SEO hypotheses, metadata, README, community, legal and release planning completed through legends-github; attribution checklist passes |
-| Measured keyword/SERP research | Spending authorization pending; free search observations recorded |
+| Measured keyword/SERP research | Collected seven requested keywords and three SERPs; imported through legends-github; README/metadata choices applied; actual cost $0.01872 |
 | Public repository, tag and release | Not published |
 | Social preview upload | Image ready; upload not attempted |
 | Public catalog pins and fresh public install | Pending immutable public archive |
@@ -26,7 +26,7 @@ The candidate catalog row deliberately contains null commit and checksum values.
 
 The wheel installs the CLI. The source distribution includes the knowledge vault, agent recipe and presentation files. No production credentials or predecessor runtime files are included.
 
-Windows and WSL tests do not establish macOS compatibility. The local archive fixture does not establish a public GitHub download or catalog sync. No live DNS mutation was performed during preparation, so write behavior is tested with synthetic transport responses only.
+Windows and WSL tests do not establish macOS compatibility. The local archive fixture does not establish a public GitHub download or catalog sync. The authorized live canary changed only one newly created disposable TXT record and verified cleanup. Other record types have offline tests, not live write coverage. API readback does not establish propagation or service health.
 
 The GitHub workflow's offline release plan reported authentication unavailable, but a separate authenticated GitHub API identity check succeeded. Treat that plan warning as offline evidence absence, not an account failure. Live repository metadata is unavailable because the target repository has not been created.
 

@@ -10,6 +10,8 @@ The repository includes source-cited DNS runbooks, an Obsidian-compatible knowle
 
 Requires Python 3.10+. No runtime dependencies. Independent community project; Cloudflare API and services remain Cloudflare's work. See THIRD_PARTY_NOTICES.md.
 
+Validation: 32 offline tests passed on Windows and Linux/WSL. A scoped live TXT canary verified creation, exact-ID update, preservation of an omitted TTL, API readback, exact-ID deletion and an empty final test-record inventory. Clean wheel and source installs and local router integration passed. Hosted macOS CI and public catalog installation remain publication-stage checks.
+
 Supported writes: A, AAAA, CNAME, TXT, MX and NS. No registrar transfers, Workers deployment, tunnel management, batch writes or automatic rollback. API readback is separate from propagation and service-health verification.
 
 Read docs/RELEASE-READINESS.md for the exact validation performed before using this candidate.

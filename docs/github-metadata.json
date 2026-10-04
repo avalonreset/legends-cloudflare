@@ -1,9 +1,10 @@
 {
   "repository": "avalonreset/legends-cloudflare",
-  "description": "Cloudflare DNS automation for agents: reviewed change plans, exact-record updates, readback checks, and an Obsidian-compatible knowledge vault.",
+  "description": "Cloudflare DNS CLI for agents: preview DNS record changes, apply reviewed updates, verify API readback, and reuse an Obsidian-compatible knowledge vault.",
   "topics": [
     "cloudflare",
     "cloudflare-api",
+    "cloudflare-dns",
     "dns",
     "dns-management",
     "dns-automation",
