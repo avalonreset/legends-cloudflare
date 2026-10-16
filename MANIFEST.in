@@ -4,6 +4,7 @@ recursive-include wiki *.md
 recursive-include references *.md
 recursive-include templates *.md
 recursive-include docs *.md *.json
+recursive-include knowledge *.md *.json
 recursive-include skills *.md
 recursive-include scripts *.py
 recursive-include tests *.py

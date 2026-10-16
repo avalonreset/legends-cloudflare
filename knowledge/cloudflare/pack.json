@@ -1,0 +1,50 @@
+{
+  "schema": "legends.knowledge-pack/v1",
+  "id": "cloudflare",
+  "module": "legends-cloudflare",
+  "version": "0.1.0",
+  "entrypoint": "index.md",
+  "files": [
+    {
+      "path": "authentication.md",
+      "sha256": "e7931d0adf0f6b72001c632762989b8ac4eeea954786f581f08f30fced7fce8f"
+    },
+    {
+      "path": "dns-operations.md",
+      "sha256": "a58a174d916259bed1e48914b80cffff142b2ef62b61cf4b00e71ecfbe221345"
+    },
+    {
+      "path": "index.md",
+      "sha256": "3fd77836c1e060ad4d56a885a4c18decd99de27095bdf41458eb018f36c61161"
+    },
+    {
+      "path": "migration.md",
+      "sha256": "6525bdee3094228351623c34b19db0f4671a882da2c79f03c541cf47a0e21c74"
+    },
+    {
+      "path": "sources.md",
+      "sha256": "9a6651a316a6afa197f871639c1c31d3c9a6bd445ef7beea4acd1da4694d6106"
+    },
+    {
+      "path": "templates/change-receipt.md",
+      "sha256": "ad97f270b8edf604038993953d2db07e5588f216015b6244461ac21994a78299"
+    },
+    {
+      "path": "templates/domain-inventory.md",
+      "sha256": "eb08020c9736e9be884f59c7175a95ff8e3269c3fa62036c0aa5702f597a8350"
+    },
+    {
+      "path": "templates/incident-review.md",
+      "sha256": "43866b1fc245fe69e4291d70b7a320ab7b61ece4c5bb6208270f49c41cadded9"
+    },
+    {
+      "path": "troubleshooting.md",
+      "sha256": "0533eeff5d33ad17870b1a014e5903a094be3b70c047704df4cf2b11325c9108"
+    }
+  ],
+  "ontology": {
+    "suggested_home": "wiki/library/legends-cloudflare/cloudflare",
+    "purpose": "Operate Cloudflare zones, DNS records, nameservers, and DNS migrations with preview-first plans, API readback, and source-cited runbooks.",
+    "kind": "library"
+  }
+}

@@ -40,8 +40,6 @@ python -m pip install .
 legends-cloudflare doctor
 ```
 
-Release candidate note: these public URLs are the intended release destinations. Public publication and catalog admission are tracked in [release readiness](docs/RELEASE-READINESS.md).
-
 Load `CLOUDFLARE_API_TOKEN` from your secret manager into the process environment. Use Zone Read and DNS Read for inspection, and DNS Edit only for approved writes, limited to the intended zones. The program does not discover `.env` files or accept tokens as command-line arguments.
 
 ```sh
@@ -85,7 +83,7 @@ Apply only with `--apply --confirm-zone example.com --confirm-plan SHA256_FROM_P
 
 ## Knowledge vault and Empire
 
-Start at [wiki/index.md](wiki/index.md). Open this repository folder in Obsidian or read it as plain Markdown. The source archive contains the vault; the wheel installs the CLI.
+Start at [wiki/index.md](wiki/index.md) or attach the versioned knowledge pack at [knowledge/cloudflare/pack.json](knowledge/cloudflare/pack.json) (`legends.knowledge-pack/v1`). Open this repository folder in Obsidian or read it as plain Markdown. The source archive contains the vault; the wheel installs the CLI.
 
 Use [the Empire integration guide](docs/EMPIRE.md) to keep private domain inventories, plans, receipts and incidents in an existing project. The module does not silently create vault records, migrate projects, or collect your infrastructure into a public repository.
 
@@ -93,7 +91,7 @@ Use [the Empire integration guide](docs/EMPIRE.md) to keep private domain invent
 
 The module recipe is [docs/AGENT-RECIPE.md](docs/AGENT-RECIPE.md). The vendored `skills/cto-legends/SKILL.md` is an unchanged copy of the central router. Do not register a separate Cloudflare skill.
 
-After public catalog admission:
+With the central [cto-legends](https://github.com/avalonreset/cto-legends) router:
 
 ```sh
 cto-legends sync

@@ -14,6 +14,7 @@ def main():
     required = [
         "LICENSE", "README.md", "SECURITY.md", "THIRD_PARTY_NOTICES.md",
         "docs/AGENT-RECIPE.md", "wiki/index.md", "references/sources.md",
+        "knowledge/cloudflare/pack.json", "knowledge/cloudflare/vault/index.md",
         "skills/cto-legends/SKILL.md", "assets/banner.webp", "assets/social-preview.png",
         "docs/catalog-entry.candidate.json", "docs/RELEASE-READINESS.md",
     ]
@@ -46,6 +47,18 @@ def main():
         expected = json.loads((ROOT / "docs/router-provenance.json").read_text())["sha256"]
         if hashlib.sha256(router.read_bytes()).hexdigest() != expected:
             errors.append("Router differs from its recorded canonical source.")
+    pack_path = ROOT / "knowledge/cloudflare/pack.json"
+    if pack_path.exists():
+        pack = json.loads(pack_path.read_text(encoding="utf-8"))
+        if pack.get("schema") != "legends.knowledge-pack/v1" or pack.get("module") != "legends-cloudflare":
+            errors.append("Knowledge pack schema or module invalid.")
+        vault_dir = ROOT / "knowledge/cloudflare/vault"
+        for item in pack.get("files", []):
+            target = vault_dir / item["path"]
+            if not target.is_file():
+                errors.append(f"Missing knowledge pack file: {item['path']}")
+            elif hashlib.sha256(target.read_bytes()).hexdigest() != item["sha256"]:
+                errors.append(f"Knowledge pack hash mismatch: {item['path']}")
     print(json.dumps({"ok": not errors, "errors": errors}, indent=2))
     return bool(errors)
 
