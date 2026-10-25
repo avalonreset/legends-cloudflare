@@ -51,7 +51,7 @@ legends-cloudflare records --zone example.com
 
 Live doctor checks zone listing only. It does not prove DNS read or edit permissions. Record output can contain private DNS content; keep it outside public repositories and managed installations.
 
-## Preview and update Cloudflare DNS records
+## Quick start: preview and update Cloudflare DNS records
 
 ```sh
 legends-cloudflare upsert --zone example.com --name www --type A --content 192.0.2.10
@@ -103,6 +103,28 @@ cto-legends run legends-cloudflare -- doctor
 ```
 
 A module release is followed by a verified catalog entry with an immutable commit and archive checksum. Catalog sync makes it discoverable; installation remains explicit. The router skill text does not need to change.
+
+## Architecture and project layout
+
+```text
+Operator / Agent
+  -> legends-cloudflare CLI (zones, nameservers, records, upsert, delete)
+  -> Plan builder (before-state snapshot + proposed payload + SHA-256 hash)
+  -> Explicit confirmation (--apply --confirm-zone --confirm-plan)
+  -> Cloudflare DNS API PATCH/POST/DELETE + immediate readback verification
+```
+
+- `legends_cloudflare/`: Zero-dependency Python CLI and Cloudflare DNS API v4 client.
+- `wiki/` and `knowledge/cloudflare/`: Source-cited DNS runbooks, migration checklists, and attachable [`legends-empire`](https://github.com/avalonreset/legends-empire) knowledge pack.
+- `docs/`: Agent recipe, Empire integration guide, release readiness, and [search strategy](docs/SEARCH-STRATEGY.md).
+
+## FAQ
+
+**Does `legends-cloudflare upsert` modify DNS records immediately?**
+No. Running `upsert` or `delete` without `--apply` performs read-only API queries and returns a JSON preview containing the current record state, the proposed change, and a `sha256` plan hash. Changes are sent only when you repeat the command with `--apply`, `--confirm-zone`, and `--confirm-plan`.
+
+**Which DNS record types can this module modify?**
+This release supports reviewed changes for `A`, `AAAA`, `CNAME`, `TXT`, `MX`, and `NS` records, and preserves existing TTL and proxy settings when those flags are omitted.
 
 ## Boundaries and verification
 
