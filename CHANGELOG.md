@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.1 - 2026-10-29
+
+- Raise minimum supported Python runtime to Python 3.11 (`requires-python = ">=3.11"`) across package metadata, documentation, and multi-OS CI.
+- Harden `.github/workflows/checks.yml` with 40-character commit SHA action pins and upgrade `pip>=26.2.2` before package installation.
+
 ## 0.1.0 - 2026-10-16
 
 - Public product identity: `legends-cloudflare`, replacing the private kit name for this distribution.

@@ -1,8 +1,8 @@
 # Release readiness
 
-Release: `legends-cloudflare` 0.1.0. Release date: 2026-10-16.
+Release: `legends-cloudflare` 0.1.1. Release date: 2026-10-16.
 
-Status: public `0.1.0` release verified across offline tests, clean-environment wheel/sdist installation, `legends-empire` `0.3.2` knowledge-pack attachment, live Cloudflare read smoke, and live disposable TXT write/update/readback/delete round-trip validation.
+Status: public `0.1.1` release verified across offline tests, clean-environment wheel/sdist installation, `legends-empire` `0.3.2` knowledge-pack attachment, live Cloudflare read smoke, and live disposable TXT write/update/readback/delete round-trip validation.
 
 | Gate | State |
 |---|---|

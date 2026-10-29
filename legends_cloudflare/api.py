@@ -51,7 +51,7 @@ class Client:
             url, data=data, method=method,
             headers={"Authorization": "Bearer " + self.token,
                      "Content-Type": "application/json",
-                     "User-Agent": "legends-cloudflare/0.1.0"},
+                     "User-Agent": "legends-cloudflare/0.1.1"},
         )
         try:
             with self.opener.open(req, timeout=30) as response:

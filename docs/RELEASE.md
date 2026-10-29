@@ -16,7 +16,7 @@ The public identity is `legends-cloudflare`. Target repository: `avalonreset/leg
 ## Publication and admission
 
 1. Confirm authorization for the concrete public candidate, then create the repository, push the reviewed commit and run hosted CI.
-2. Tag the verified commit as `v0.1.0`; publish the source/wheel artifacts with SHA256SUMS and release notes.
+2. Tag the verified commit as `v0.1.1`; publish the source/wheel artifacts with SHA256SUMS and release notes.
 3. Upload `assets/social-preview.png` through GitHub Settings and verify the served preview. A committed image is not an uploaded social preview.
 4. Download the immutable GitHub codeload ZIP for that commit and calculate its SHA-256.
 5. Use `scripts/prepare_catalog.py --catalog CURRENT_CATALOG --commit REAL_COMMIT --sha256 REAL_ARCHIVE_HASH --output NEW_CANDIDATE` to prepare admission. It adds the module, preserves unrelated entries, increments only the catalog version, and adds the `legends-cloudflare-kit` compatibility alias. It does not publish or verify that supplied pins exist; validate the actual public archive separately.

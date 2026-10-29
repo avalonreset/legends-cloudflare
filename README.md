@@ -31,7 +31,7 @@ These checks reduce specific failure modes; they do not make DNS changes risk-fr
 
 ## Install the Cloudflare DNS CLI
 
-Python 3.10 or newer. No runtime dependencies or MCP server.
+Python 3.11 or newer. No runtime dependencies or MCP server.
 
 ```sh
 git clone https://github.com/avalonreset/legends-cloudflare.git

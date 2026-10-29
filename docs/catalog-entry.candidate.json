@@ -37,14 +37,14 @@
   "commit": null,
   "sha256": null,
   "license": "MIT",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "discovery": {
     "instructions": [
       "README.md",
       "docs/AGENT-RECIPE.md",
       "wiki/index.md"
     ],
-    "setup": "Python 3.10+. Offline doctor needs no credentials. Live operations require CLOUDFLARE_API_TOKEN scoped to the selected zones; writes require explicit zone and preview-hash confirmation.",
+    "setup": "Python 3.11+. Offline doctor needs no credentials. Live operations require CLOUDFLARE_API_TOKEN scoped to the selected zones; writes require explicit zone and preview-hash confirmation.",
     "not_for": "Registrar transfers, registrar nameserver changes, Workers deployments, tunnels, bulk writes, or an MCP server.",
     "signals": [
       "cloudflare",

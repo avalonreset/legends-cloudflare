@@ -1,4 +1,4 @@
-# legends-cloudflare v0.1.0
+# legends-cloudflare v0.1.1
 
 Cloudflare DNS automation with reviewed changes and a reusable knowledge vault.
 
@@ -8,7 +8,7 @@ Changes are tied to the exact zone, before-state and requested fields through a 
 
 The repository includes source-cited DNS runbooks, an Obsidian-compatible knowledge index, an attachable `legends.knowledge-pack/v1` library (`knowledge/cloudflare/pack.json`), and templates for private Empire operating records. A single central `cto-legends` skill loads the module recipe on demand.
 
-Requires Python 3.10+. No runtime dependencies. Independent community project; Cloudflare API and services remain Cloudflare's work. See THIRD_PARTY_NOTICES.md.
+Requires Python 3.11+. No runtime dependencies. Independent community project; Cloudflare API and services remain Cloudflare's work. See THIRD_PARTY_NOTICES.md.
 
 Validation: 32 offline tests passed on Windows and Linux/WSL, and GitHub Actions runs the full matrix across Ubuntu, Windows, and macOS (`3.10`, `3.12`). A scoped live TXT canary verified creation, exact-ID update, preservation of an omitted TTL, API readback, exact-ID deletion and an empty final test-record inventory. Clean wheel and source installs, `legends-empire` `0.3.2` knowledge-pack attachment, and `cto-legends` router integration passed.
 
