@@ -4,7 +4,7 @@
 # ![legends-cloudflare](assets/banner.webp)
 
 [![release](https://img.shields.io/github/v/release/avalonreset/legends-cloudflare?style=flat-square&label=release&labelColor=000000&color=ff0000)](https://github.com/avalonreset/legends-cloudflare/releases/latest)
-[![checks](https://github.com/avalonreset/legends-cloudflare/actions/workflows/checks.yml/badge.svg)](https://github.com/avalonreset/legends-cloudflare/actions/workflows/checks.yml)
+[![checks](https://img.shields.io/github/actions/workflow/status/avalonreset/legends-cloudflare/checks.yml?branch=main&label=checks&style=flat-square&labelColor=000000)](https://github.com/avalonreset/legends-cloudflare/actions/workflows/checks.yml)
 [![license](https://img.shields.io/github/license/avalonreset/legends-cloudflare?style=flat-square&label=license&labelColor=000000&color=666666)](LICENSE)
 
 **Cloudflare DNS automation with reviewed changes and a reusable knowledge vault.**
@@ -34,10 +34,11 @@ These checks reduce specific failure modes; they do not make DNS changes risk-fr
 Python 3.11 or newer. No runtime dependencies or MCP server.
 
 ```sh
-git clone https://github.com/avalonreset/legends-cloudflare.git
+git clone --branch v0.1.2 https://github.com/avalonreset/legends-cloudflare.git
 cd legends-cloudflare
 python -m pip install .
 legends-cloudflare doctor
+legends-cloudflare resources
 ```
 
 Load `CLOUDFLARE_API_TOKEN` from your secret manager into the process environment. Use Zone Read and DNS Read for inspection, and DNS Edit only for approved writes, limited to the intended zones. The program does not discover `.env` files or accept tokens as command-line arguments.
@@ -87,7 +88,7 @@ Start at [wiki/index.md](wiki/index.md) or attach the versioned knowledge pack a
 
 Use [the Empire integration guide](docs/EMPIRE.md) to keep private domain inventories, plans, receipts and incidents in an existing project. The module does not silently create vault records, migrate projects, or collect your infrastructure into a public repository.
 
-## CTO Legends router
+## Agent setup (via `cto-legends`)
 
 The module recipe is [docs/AGENT-RECIPE.md](docs/AGENT-RECIPE.md). The vendored `skills/cto-legends/SKILL.md` is an unchanged copy of the central router. Do not register a separate Cloudflare skill.
 

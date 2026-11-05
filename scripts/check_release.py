@@ -1,67 +1,178 @@
-"""Check public source hygiene and local Markdown links without network calls."""
+"""Offline release checks for links, private residue, EDR hygiene, and required artifacts."""
+import argparse
 import hashlib
 import json
 from pathlib import Path
 import re
+import struct
 import sys
+from urllib.parse import unquote
 
 ROOT = Path(__file__).resolve().parents[1]
-EXCLUDE = {".git", "__pycache__", "build", "dist", ".venv", ".github-audit"}
+SKIP = {".git", ".venv", "dist", "build", "__pycache__", ".integration", ".github-audit"}
+REQUIRED = [
+    "README.md",
+    "LICENSE",
+    "NOTICE",
+    "THIRD_PARTY_NOTICES.md",
+    "AGENTS.md",
+    "SECURITY.md",
+    "wiki/index.md",
+    "references/sources.md",
+    "docs/AGENT-RECIPE.md",
+    "docs/RELEASE-READINESS.md",
+    "docs/router-provenance.json",
+    "templates/change-receipt.md",
+    "skills/cto-legends/SKILL.md",
+    "knowledge/cloudflare/pack.json",
+    "knowledge/cloudflare/vault/index.md",
+    "assets/manifest.json",
+]
+TEXT_SUFFIXES = {".md", ".py", ".json", ".toml", ".yml", ".in", ".txt", ".cfg", ".ini"}
+FORBIDDEN = [
+    r"(?i)[a-z]:\\users\\",
+    r"(?i)\.tail[a-z0-9]+\.ts\.net",
+    r"(?i)sk_live_[a-z0-9]{12,}",
+    r"gh[pousr]_[A-Za-z0-9]{20,}",
+    r"-----BEGIN (?:RSA |OPENSSH |EC )?PRIVATE KEY-----",
+    r"CREATE_NO_WINDOW",
+    r"0x08000000",
+    r"(?i)-WindowStyle\s+Hidden",
+    r"(?i)-ExecutionPolicy\s+Bypass",
+    r"(?i)ctypes\.windll",
+    r"(?i)CryptUnprotectData",
+    r"(?i)GetAsyncKeyState",
+    r"(?i)IndexedDB",
+]
+FORBIDDEN_FILES = {".pem", ".key", ".p12", ".pfx", ".ps1", ".bat", ".cmd", ".vbs", ".ahk", ".ttf", ".otf"}
+PNG_METADATA_CHUNKS = {"tEXt", "iTXt", "zTXt", "eXIf"}
+WEBP_METADATA_CHUNKS = {b"EXIF", b"XMP "}
 
 
-def main():
+def image_metadata_issues(path):
+    """Flag raster metadata chunks that can carry authoring residue."""
+    try:
+        raw = path.read_bytes()
+    except OSError:
+        return ["Cannot read image: %s" % path]
+    issues = []
+    suffix = path.suffix.lower()
+    if suffix == ".png":
+        if raw[:8] != b"\x89PNG\r\n\x1a\n":
+            return ["Not a PNG file: %s" % path]
+        offset = 8
+        while offset + 8 <= len(raw):
+            length = struct.unpack(">I", raw[offset:offset + 4])[0]
+            chunk = raw[offset + 4:offset + 8]
+            try:
+                name = chunk.decode("latin1")
+            except UnicodeError:
+                break
+            if name in PNG_METADATA_CHUNKS:
+                issues.append(f"Image metadata chunk {name} in {path.name}; strip authoring residue.")
+            if name == "IEND":
+                break
+            offset += 12 + length
+    elif suffix == ".webp":
+        if raw[:4] != b"RIFF" or raw[8:12] != b"WEBP":
+            return ["Not a WebP file: %s" % path]
+        offset = 12
+        while offset + 8 <= len(raw):
+            tag = raw[offset:offset + 4]
+            length = struct.unpack("<I", raw[offset + 4:offset + 8])[0]
+            if tag in WEBP_METADATA_CHUNKS:
+                issues.append(f"Image metadata chunk {tag!r} in {path.name}; strip authoring residue.")
+                break
+            offset += 8 + length + (length % 2)
+    return issues
+
+
+def check(root=ROOT):
     errors = []
-    required = [
-        "LICENSE", "README.md", "SECURITY.md", "THIRD_PARTY_NOTICES.md",
-        "docs/AGENT-RECIPE.md", "wiki/index.md", "references/sources.md",
-        "knowledge/cloudflare/pack.json", "knowledge/cloudflare/vault/index.md",
-        "skills/cto-legends/SKILL.md", "assets/banner.webp", "assets/social-preview.png",
-        "docs/catalog-entry.candidate.json", "docs/RELEASE-READINESS.md",
-    ]
-    for rel in required:
-        if not (ROOT / rel).is_file():
-            errors.append("Missing " + rel)
-    for path in ROOT.rglob("*"):
-        relative = path.relative_to(ROOT)
-        if any(p in EXCLUDE or p.endswith(".egg-info") for p in relative.parts):
-            continue
-        if path.is_symlink():
-            errors.append("Symlink: " + relative.as_posix())
-        if not path.is_file():
-            continue
-        if path.name == ".env" or path.suffix.lower() in {".pem", ".key", ".ttf", ".otf"}:
-            errors.append("Forbidden public file: " + relative.as_posix())
-        if path.suffix in {".md", ".py", ".json", ".toml", ".yml"}:
-            text = path.read_text(encoding="utf-8")
-            if re.search(r"(?i)(?:[ce]:[\\/](?:users|empire|legends-)|ctolegends\.com)", text):
-                errors.append("Private host reference: " + relative.as_posix())
-            if path.suffix == ".md":
-                for link in re.findall(r"\]\(([^)\s]+)\)", text):
-                    if "://" in link or link.startswith(("#", "mailto:")):
-                        continue
-                    target = link.split("#", 1)[0]
-                    if target and not (path.parent / target).exists():
-                        errors.append(f"Broken link in {relative}: {link}")
-    router = ROOT / "skills/cto-legends/SKILL.md"
-    if router.exists():
-        expected = json.loads((ROOT / "docs/router-provenance.json").read_text())["sha256"]
-        if hashlib.sha256(router.read_bytes()).hexdigest() != expected:
-            errors.append("Router differs from its recorded canonical source.")
-    pack_path = ROOT / "knowledge/cloudflare/pack.json"
-    if pack_path.exists():
-        pack = json.loads(pack_path.read_text(encoding="utf-8"))
-        if pack.get("schema") != "legends.knowledge-pack/v1" or pack.get("module") != "legends-cloudflare":
-            errors.append("Knowledge pack schema or module invalid.")
-        vault_dir = ROOT / "knowledge/cloudflare/vault"
-        for item in pack.get("files", []):
-            target = vault_dir / item["path"]
+    for name in REQUIRED:
+        if not (root / name).is_file():
+            errors.append(f"Missing required file: {name}")
+    manifest = root / "assets" / "manifest.json"
+    if manifest.is_file():
+        try:
+            entries = json.loads(manifest.read_text(encoding="utf-8-sig"))["files"]
+        except (ValueError, KeyError):
+            errors.append("assets/manifest.json is not a manifest with files.")
+            entries = []
+        for entry in entries:
+            target = root / "assets" / entry.get("name", "")
+            try:
+                raw = target.read_bytes()
+            except OSError:
+                errors.append(f"Manifest asset missing: {entry.get('name')}")
+                continue
+            if len(raw) != entry.get("bytes"):
+                errors.append(f"Manifest byte mismatch: {entry.get('name')}")
+            if hashlib.sha256(raw).hexdigest() != entry.get("sha256"):
+                errors.append(f"Manifest hash mismatch: {entry.get('name')}")
+    router = root / "skills" / "cto-legends" / "SKILL.md"
+    prov = root / "docs" / "router-provenance.json"
+    if router.is_file() and prov.is_file():
+        try:
+            expected = json.loads(prov.read_text(encoding="utf-8-sig"))["sha256"]
+            if hashlib.sha256(router.read_bytes()).hexdigest() != expected:
+                errors.append("Router differs from its recorded canonical source.")
+        except (ValueError, KeyError):
+            errors.append("docs/router-provenance.json is invalid.")
+    pack_manifest = root / "knowledge" / "cloudflare" / "pack.json"
+    if pack_manifest.is_file():
+        try:
+            pack_data = json.loads(pack_manifest.read_text(encoding="utf-8-sig"))
+            pack_files = pack_data["files"]
+        except (ValueError, KeyError):
+            errors.append("knowledge/cloudflare/pack.json is invalid.")
+            pack_files = []
+        vault_dir = pack_manifest.parent / "vault"
+        for item in pack_files:
+            rel_path = item.get("path", "")
+            target = vault_dir / rel_path
             if not target.is_file():
-                errors.append(f"Missing knowledge pack file: {item['path']}")
-            elif hashlib.sha256(target.read_bytes()).hexdigest() != item["sha256"]:
-                errors.append(f"Knowledge pack hash mismatch: {item['path']}")
-    print(json.dumps({"ok": not errors, "errors": errors}, indent=2))
-    return bool(errors)
+                errors.append(f"Knowledge pack file missing: {rel_path}")
+                continue
+            if hashlib.sha256(target.read_bytes()).hexdigest() != item.get("sha256"):
+                errors.append(f"Knowledge pack hash mismatch: {rel_path}")
+    for path in root.rglob("*"):
+        rel = path.relative_to(root)
+        if not path.is_file() or any(p in SKIP or p.endswith(".egg-info") for p in rel.parts):
+            continue
+        if path.suffix.lower() in FORBIDDEN_FILES or path.name == ".env":
+            errors.append(f"Private key or forbidden script material must not ship: {rel}")
+            continue
+        if path.suffix.lower() in {".png", ".webp"}:
+            errors.extend(f"{rel}: {issue}" for issue in image_metadata_issues(path))
+            continue
+        if path.suffix not in TEXT_SUFFIXES:
+            continue
+        text = path.read_text(encoding="utf-8-sig")
+        if path.name != "check_release.py":
+            for pattern in FORBIDDEN:
+                if re.search(pattern, text):
+                    errors.append(f"Possible private or EDR-sensitive residue ({pattern}): {rel}")
+        if path.suffix != ".md":
+            continue
+        if "\u2014" in text or "\u2013" in text:
+            errors.append(f"Disallowed dash in copy: {rel}")
+        for target in re.findall(r"\[[^\]]*\]\(([^)]+)\)", text):
+            if target.startswith(("https://", "http://", "mailto:", "#")):
+                continue
+            target = unquote(target.split("#", 1)[0].split("?", 1)[0])
+            resolved = (path.parent / target).resolve()
+            if not resolved.is_relative_to(root.resolve()) or not resolved.exists():
+                errors.append(f"Broken or external local link: {rel}: {target}")
+    return errors
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    parser = argparse.ArgumentParser(description="Offline release checks.")
+    parser.add_argument("--root", type=Path, default=ROOT)
+    options = parser.parse_args()
+    failures = check(options.root)
+    for failure in failures:
+        print(failure)
+    print(f"Release checks: {'FAIL' if failures else 'PASS'} ({len(failures)} issues)")
+    sys.exit(bool(failures))

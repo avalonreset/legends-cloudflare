@@ -11,3 +11,4 @@ Run offline doctor before commands and live doctor before authorized API operati
 - Use current official Cloudflare sources and date evidence when changing guidance.
 - Run offline tests, release checks, and clean installation before release.
 - Publication, registrar transfers and production DNS changes are separate actions requiring their actual task authorization.
+- EDR and Security Guardrails: Never spawn hidden consoles, execution-policy bypass shell wrappers, or background localhost daemons. Never read local browser profile databases, DPAPI stores, or third-party credential stores. Use only the explicit `CLOUDFLARE_API_TOKEN` environment variable over verified HTTPS origins.

@@ -7,6 +7,7 @@ from datetime import datetime, timezone
 from . import __version__
 from .api import Client, CloudflareError
 from .dns import TYPES, apply_plan, make_plan, snapshot
+from .resources import ResourceError, resolve_resources
 
 
 def parser():
@@ -15,6 +16,7 @@ def parser():
     sub = p.add_subparsers(dest="command", required=True)
     doctor = sub.add_parser("doctor", help="Offline runtime check; --live checks zone access.")
     doctor.add_argument("--live", action="store_true")
+    sub.add_parser("resources", help="Return installed recipe and knowledge-pack paths.")
     sub.add_parser("zones", help="List all accessible zones.")
     ns = sub.add_parser("nameservers", help="Get the selected zone's assigned nameservers.")
     ns.add_argument("--zone", required=True)
@@ -43,6 +45,8 @@ def parser():
 
 
 def execute(args, client_factory=Client):
+    if args.command == "resources":
+        return resolve_resources()
     if args.command == "doctor" and not args.live:
         return {"module": "legends-cloudflare", "version": __version__,
                 "ok": True, "mode": "offline", "live_access": "not_checked"}
@@ -90,7 +94,7 @@ def main(argv=None):
         result["observed_at"] = datetime.now(timezone.utc).isoformat()
         print(json.dumps(result, indent=2, ensure_ascii=True))
         return 0
-    except CloudflareError as exc:
+    except (CloudflareError, ResourceError) as exc:
         print(json.dumps({"ok": False, "error": str(exc)}), file=sys.stderr)
         return 1
     except (ValueError, TypeError, KeyError):

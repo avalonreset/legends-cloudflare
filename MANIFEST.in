@@ -1,4 +1,4 @@
-include LICENSE README.md AGENTS.md SECURITY.md CHANGELOG.md THIRD_PARTY_NOTICES.md CONTRIBUTING.md
+include .legends-module LICENSE README.md AGENTS.md SECURITY.md CHANGELOG.md THIRD_PARTY_NOTICES.md CONTRIBUTING.md
 include NOTICE CITATION.cff SUPPORT.md CODE_OF_CONDUCT.md
 recursive-include wiki *.md
 recursive-include references *.md

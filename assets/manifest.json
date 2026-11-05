@@ -1,0 +1,41 @@
+{
+  "generator": "scripts/render_assets.py",
+  "palette": {
+    "background": "#000000",
+    "surface": "#161616",
+    "border": "#262626",
+    "foreground": "#FFFFFF",
+    "muted": "#A3A3A3",
+    "accent": "#FF0000"
+  },
+  "files": [
+    {
+      "name": "banner.png",
+      "width": 4096,
+      "height": 1024,
+      "bytes": 76879,
+      "sha256": "77b6775fea42d90a78ef470c74c5404b067e77da7eb41e32d918d5ed0f12b281"
+    },
+    {
+      "name": "banner.webp",
+      "width": 4096,
+      "height": 1024,
+      "bytes": 30344,
+      "sha256": "df4fff528be05f37d94f2542bdda6d3a84a7ecaab81e7aa8ecbc6bf71226dbcc"
+    },
+    {
+      "name": "preview.png",
+      "width": 1024,
+      "height": 256,
+      "bytes": 27947,
+      "sha256": "2e42cd0a195bd31b9a8703f153c9d7a0a9d5e7a1e73656aa9e60aa79c9db3728"
+    },
+    {
+      "name": "social-preview.png",
+      "width": 1280,
+      "height": 640,
+      "bytes": 25037,
+      "sha256": "9b04515ef4469b3fcf8d3286945ef2db4a883bee1602a478517e961e6f1a4ef8"
+    }
+  ]
+}
