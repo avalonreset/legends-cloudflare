@@ -6,6 +6,8 @@ import urllib.error
 import urllib.parse
 import urllib.request
 
+from . import __version__
+
 API_ROOT = "https://api.cloudflare.com/client/v4"
 ID = r"[a-f0-9]{32}"
 PATH = re.compile(rf"/zones(?:/{ID}(?:/dns_records(?:/{ID})?)?)?\Z")
@@ -51,7 +53,7 @@ class Client:
             url, data=data, method=method,
             headers={"Authorization": "Bearer " + self.token,
                      "Content-Type": "application/json",
-                     "User-Agent": "legends-cloudflare/0.1.1"},
+                     "User-Agent": f"legends-cloudflare/{__version__}"},
         )
         try:
             with self.opener.open(req, timeout=30) as response:

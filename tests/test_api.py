@@ -4,6 +4,7 @@ import unittest
 import urllib.error
 from unittest.mock import patch
 
+from legends_cloudflare import __version__
 from legends_cloudflare.api import Client, CloudflareError, MAX_RESPONSE, NoRedirect
 
 
@@ -31,6 +32,10 @@ class ApiTests(unittest.TestCase):
         url = c.opener.calls[0].full_url
         self.assertTrue(url.startswith("https://api.cloudflare.com/client/v4/zones?"))
         self.assertIn("%26", url)
+        self.assertEqual(
+            c.opener.calls[0].get_header("User-agent"),
+            f"legends-cloudflare/{__version__}",
+        )
 
     def test_reject_external_paths_before_transport(self):
         c = self.client(b"")

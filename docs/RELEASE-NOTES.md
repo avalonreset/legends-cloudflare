@@ -1,8 +1,8 @@
-# legends-cloudflare v0.1.1
+# legends-cloudflare v0.1.3
 
 Cloudflare DNS automation with reviewed changes and a reusable knowledge vault.
 
-This first public release brings zone and DNS inventories, assigned nameserver inspection, preview-first single-record changes, exact-ID deletion and API readback to the CTO Legends ecosystem.
+This release brings zone and DNS inventories, assigned nameserver inspection, preview-first single-record changes, exact-ID deletion and API readback to the CTO Legends ecosystem.
 
 Changes are tied to the exact zone, before-state and requested fields through a reviewed SHA-256 plan. Updates preserve settings the operator did not request to change. The client refuses arbitrary API origins, redirects, ambiguous matches and silently incomplete pagination.
 
@@ -10,7 +10,7 @@ The repository includes source-cited DNS runbooks, an Obsidian-compatible knowle
 
 Requires Python 3.11+. No runtime dependencies. Independent community project; Cloudflare API and services remain Cloudflare's work. See THIRD_PARTY_NOTICES.md.
 
-Validation: 32 offline tests passed on Windows and Linux/WSL, and GitHub Actions runs the full matrix across Ubuntu, Windows, and macOS (`3.10`, `3.12`). A scoped live TXT canary verified creation, exact-ID update, preservation of an omitted TTL, API readback, exact-ID deletion and an empty final test-record inventory. Clean wheel and source installs, `legends-empire` `0.3.2` knowledge-pack attachment, and `cto-legends` router integration passed.
+Validation: offline tests pass on Windows and Linux/WSL, and GitHub Actions runs the full matrix across Ubuntu, Windows, and macOS (`3.11`, `3.14`). A scoped live TXT canary verified creation, exact-ID update, preservation of an omitted TTL, API readback, exact-ID deletion and an empty final test-record inventory. Clean wheel and source installs, `legends-empire` `0.3.4` knowledge-pack attachment, and `cto-legends` router integration passed.
 
 Supported writes: A, AAAA, CNAME, TXT, MX and NS. No registrar transfers, Workers deployment, tunnel management, batch writes or automatic rollback. API readback is separate from propagation and service-health verification.
 

@@ -13,9 +13,12 @@ MIRROR_FILES = [
     "SUPPORT.md",
     "CONTRIBUTING.md",
     "CODE_OF_CONDUCT.md",
+    "PRIVACY.md",
     "AGENTS.md",
     "SECURITY.md",
     "CHANGELOG.md",
+    ".legends-module",
+    ".legends-router-pin",
 ]
 MIRROR_DIRS = ["docs", "knowledge", "skills", "wiki", "references", "templates", "assets"]
 MIRROR_SUFFIXES = {".md", ".json", ".png", ".webp"}

@@ -33,3 +33,16 @@ class CatalogTests(unittest.TestCase):
                   "aliases": {"legends-cloudflare-kit": "something-else"}}
         with self.assertRaises(ValueError):
             module.prepare(before, {}, "a" * 40, "b" * 64)
+
+    def test_read_bounded_json_rejects_oversized_and_duplicate_keys(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            dup = Path(tmp) / "dup.json"
+            dup.write_text('{"a": 1, "a": 2}', encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "Duplicate JSON key"):
+                module.read_bounded_json(dup)
+
+            big = Path(tmp) / "big.json"
+            big.write_bytes(b"x" * (module.MAX_CATALOG_BYTES + 1))
+            with self.assertRaisesRegex(ValueError, "exceeds"):
+                module.read_bounded_json(big)

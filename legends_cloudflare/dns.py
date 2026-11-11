@@ -82,7 +82,10 @@ def make_plan(client, *, zone, name, kind, content=None, ttl=None, proxied=None,
                 raise CloudflareError("Record target must be an ASCII hostname.")
         if ttl is not None and (type(ttl) is not int or ttl != 1 and not 60 <= ttl <= 86400):
             raise CloudflareError("TTL must be 1 (automatic) or 60 through 86400.")
-        if priority is not None and (kind != "MX" or not 0 <= priority <= 65535):
+        if priority is not None and (
+            kind != "MX" or isinstance(priority, bool) or not isinstance(priority, int)
+            or not 0 <= priority <= 65535
+        ):
             raise CloudflareError("Priority is valid only for MX, from 0 through 65535.")
         if proxied is not None and kind not in {"A", "AAAA", "CNAME"}:
             raise CloudflareError("Proxy setting only applies to A, AAAA and CNAME.")

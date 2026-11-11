@@ -161,6 +161,9 @@ class DnsTests(unittest.TestCase):
     def test_mx_priority(self):
         with self.assertRaises(CloudflareError):
             plan(Fake([]), kind="MX", content="mail.example.com")
+        for bad_priority in (True, False, -1, 65536):
+            with self.subTest(priority=bad_priority), self.assertRaises(CloudflareError):
+                plan(Fake([]), kind="MX", content="mail.example.com", priority=bad_priority)
         p = plan(Fake([]), kind="MX", content="mail.example.com", priority=10)
         self.assertEqual(p["payload"]["priority"], 10)
 

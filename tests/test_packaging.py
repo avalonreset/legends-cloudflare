@@ -1,12 +1,14 @@
 """Verify build-time data mirror and packaged resources."""
+import hashlib
 from importlib import metadata as importlib_metadata
 from pathlib import Path
 import posixpath
 import re
+import tempfile
 import unittest
 from urllib.parse import unquote
 
-from legends_cloudflare.resources import ResourceError, resolve_resources
+from legends_cloudflare.resources import MAX_FILE_BYTES, ResourceError, resolve_resources, verify_root
 
 ROOT = Path(__file__).resolve().parents[1]
 LINK_RE = re.compile(r"\[[^\]]*\]\(([^)]+)\)")
@@ -17,6 +19,8 @@ REQUIRED_DATA = [
     "legends_cloudflare/_data/THIRD_PARTY_NOTICES.md",
     "legends_cloudflare/_data/SUPPORT.md",
     "legends_cloudflare/_data/CONTRIBUTING.md",
+    "legends_cloudflare/_data/CODE_OF_CONDUCT.md",
+    "legends_cloudflare/_data/PRIVACY.md",
     "legends_cloudflare/_data/AGENTS.md",
     "legends_cloudflare/_data/docs/AGENT-RECIPE.md",
     "legends_cloudflare/_data/knowledge/cloudflare/pack.json",
@@ -26,6 +30,8 @@ REQUIRED_DATA = [
     "legends_cloudflare/_data/skills/cto-legends/SKILL.md",
     "legends_cloudflare/_data/SECURITY.md",
     "legends_cloudflare/_data/CHANGELOG.md",
+    "legends_cloudflare/_data/.legends-module",
+    "legends_cloudflare/_data/.legends-router-pin",
 ]
 
 
@@ -93,6 +99,52 @@ class PackagingTest(unittest.TestCase):
     def test_missing_resources_raise(self):
         with self.assertRaises(ResourceError):
             resolve_resources(Path("/nonexistent/legends-cloudflare-pkg"))
+
+    def test_verify_root_rejects_oversized_and_duplicate_key_pack(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "docs").mkdir(parents=True)
+            (root / "knowledge" / "cloudflare" / "vault").mkdir(parents=True)
+            recipe = root / "docs" / "AGENT-RECIPE.md"
+            recipe.write_text("# Recipe\n", encoding="utf-8")
+            pack_manifest = root / "knowledge" / "cloudflare" / "pack.json"
+            pack_manifest.write_text(
+                '{"files":[{"path":"index.md","sha256":"00"}],"files":[]}',
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(ResourceError, "Invalid knowledge pack manifest"):
+                verify_root(root)
+
+            vault_file = root / "knowledge" / "cloudflare" / "vault" / "index.md"
+            vault_file.write_bytes(b"x" * (MAX_FILE_BYTES + 1))
+            digest = hashlib.sha256(vault_file.read_bytes()).hexdigest()
+            pack_manifest.write_text(
+                f'{{"files":[{{"path":"index.md","sha256":"{digest}"}}]}}',
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(ResourceError, "exceeds"):
+                verify_root(root)
+
+    def test_verify_root_rejects_symlink(self):
+        from unittest.mock import patch
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "docs").mkdir(parents=True)
+            (root / "knowledge" / "cloudflare" / "vault").mkdir(parents=True)
+            recipe = root / "docs" / "AGENT-RECIPE.md"
+            recipe.write_text("# Recipe\n", encoding="utf-8")
+            pack_manifest = root / "knowledge" / "cloudflare" / "pack.json"
+            pack_manifest.write_text('{"files":[]}', encoding="utf-8")
+            orig_is_symlink = Path.is_symlink
+
+            def fake_is_symlink(self_path):
+                if self_path.name == "AGENT-RECIPE.md":
+                    return True
+                return orig_is_symlink(self_path)
+
+            with patch.object(Path, "is_symlink", fake_is_symlink):
+                with self.assertRaisesRegex(ResourceError, "Symlink refused"):
+                    verify_root(root)
 
 
 class WheelSmoke(unittest.TestCase):

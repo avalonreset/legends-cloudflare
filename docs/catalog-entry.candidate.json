@@ -37,7 +37,7 @@
   "commit": null,
   "sha256": null,
   "license": "MIT",
-  "version": "0.1.1",
+  "version": "0.1.3",
   "discovery": {
     "instructions": [
       "README.md",

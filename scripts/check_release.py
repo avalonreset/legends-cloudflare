@@ -1,4 +1,6 @@
 """Offline release checks for links, private residue, EDR hygiene, and required artifacts."""
+from __future__ import annotations
+
 import argparse
 import hashlib
 import json
@@ -17,22 +19,39 @@ REQUIRED = [
     "THIRD_PARTY_NOTICES.md",
     "AGENTS.md",
     "SECURITY.md",
+    "PRIVACY.md",
+    "SUPPORT.md",
+    "CONTRIBUTING.md",
+    "CODE_OF_CONDUCT.md",
+    "CHANGELOG.md",
+    "CITATION.cff",
+    ".legends-module",
+    ".legends-router-pin",
     "wiki/index.md",
     "references/sources.md",
     "docs/AGENT-RECIPE.md",
+    "docs/RELEASE.md",
+    "docs/RELEASE-NOTES.md",
     "docs/RELEASE-READINESS.md",
+    "docs/catalog-entry.candidate.json",
     "docs/router-provenance.json",
     "templates/change-receipt.md",
     "skills/cto-legends/SKILL.md",
     "knowledge/cloudflare/pack.json",
     "knowledge/cloudflare/vault/index.md",
     "assets/manifest.json",
+    "assets/banner.png",
+    "assets/banner.webp",
+    "assets/preview.png",
+    "assets/social-preview.png",
 ]
-TEXT_SUFFIXES = {".md", ".py", ".json", ".toml", ".yml", ".in", ".txt", ".cfg", ".ini"}
+TEXT_SUFFIXES = {".md", ".py", ".json", ".toml", ".yml", ".in", ".txt", ".cfg", ".ini", ".cff"}
 FORBIDDEN = [
     r"(?i)[a-z]:\\users\\",
+    r"(?i)\be:[/\\]",
     r"(?i)\.tail[a-z0-9]+\.ts\.net",
     r"(?i)sk_live_[a-z0-9]{12,}",
+    r"(?i)nsec1[qpzry9x8gf2tvdw0s3jn54khce6mua7l]{30,}",
     r"gh[pousr]_[A-Za-z0-9]{20,}",
     r"-----BEGIN (?:RSA |OPENSSH |EC )?PRIVATE KEY-----",
     r"CREATE_NO_WINDOW",
@@ -49,21 +68,21 @@ PNG_METADATA_CHUNKS = {"tEXt", "iTXt", "zTXt", "eXIf"}
 WEBP_METADATA_CHUNKS = {b"EXIF", b"XMP "}
 
 
-def image_metadata_issues(path):
+def image_metadata_issues(path: Path) -> list[str]:
     """Flag raster metadata chunks that can carry authoring residue."""
     try:
         raw = path.read_bytes()
     except OSError:
-        return ["Cannot read image: %s" % path]
-    issues = []
+        return [f"Cannot read image: {path}"]
+    issues: list[str] = []
     suffix = path.suffix.lower()
     if suffix == ".png":
         if raw[:8] != b"\x89PNG\r\n\x1a\n":
-            return ["Not a PNG file: %s" % path]
+            return [f"Not a PNG file: {path}"]
         offset = 8
         while offset + 8 <= len(raw):
-            length = struct.unpack(">I", raw[offset:offset + 4])[0]
-            chunk = raw[offset + 4:offset + 8]
+            length = struct.unpack(">I", raw[offset : offset + 4])[0]
+            chunk = raw[offset + 4 : offset + 8]
             try:
                 name = chunk.decode("latin1")
             except UnicodeError:
@@ -75,11 +94,11 @@ def image_metadata_issues(path):
             offset += 12 + length
     elif suffix == ".webp":
         if raw[:4] != b"RIFF" or raw[8:12] != b"WEBP":
-            return ["Not a WebP file: %s" % path]
+            return [f"Not a WebP file: {path}"]
         offset = 12
         while offset + 8 <= len(raw):
-            tag = raw[offset:offset + 4]
-            length = struct.unpack("<I", raw[offset + 4:offset + 8])[0]
+            tag = raw[offset : offset + 4]
+            length = struct.unpack("<I", raw[offset + 4 : offset + 8])[0]
             if tag in WEBP_METADATA_CHUNKS:
                 issues.append(f"Image metadata chunk {tag!r} in {path.name}; strip authoring residue.")
                 break
@@ -87,8 +106,8 @@ def image_metadata_issues(path):
     return issues
 
 
-def check(root=ROOT):
-    errors = []
+def check(root: Path = ROOT) -> list[str]:
+    errors: list[str] = []
     for name in REQUIRED:
         if not (root / name).is_file():
             errors.append(f"Missing required file: {name}")
@@ -146,7 +165,7 @@ def check(root=ROOT):
         if path.suffix.lower() in {".png", ".webp"}:
             errors.extend(f"{rel}: {issue}" for issue in image_metadata_issues(path))
             continue
-        if path.suffix not in TEXT_SUFFIXES:
+        if path.suffix not in TEXT_SUFFIXES and path.name not in {"LICENSE", "NOTICE"}:
             continue
         text = path.read_text(encoding="utf-8-sig")
         if path.name != "check_release.py":
@@ -157,6 +176,8 @@ def check(root=ROOT):
             continue
         if "\u2014" in text or "\u2013" in text:
             errors.append(f"Disallowed dash in copy: {rel}")
+        if "\\`" in text:
+            errors.append(f"Backslash-escaped backtick in Markdown copy: {rel}")
         for target in re.findall(r"\[[^\]]*\]\(([^)]+)\)", text):
             if target.startswith(("https://", "http://", "mailto:", "#")):
                 continue
