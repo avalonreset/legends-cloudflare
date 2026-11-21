@@ -6,6 +6,7 @@
 [![release](https://img.shields.io/github/v/release/avalonreset/legends-cloudflare?style=flat-square&label=release&labelColor=000000&color=ff0000)](https://github.com/avalonreset/legends-cloudflare/releases/latest)
 [![checks](https://img.shields.io/github/actions/workflow/status/avalonreset/legends-cloudflare/checks.yml?branch=main&label=checks&style=flat-square&labelColor=000000)](https://github.com/avalonreset/legends-cloudflare/actions/workflows/checks.yml)
 [![license](https://img.shields.io/github/license/avalonreset/legends-cloudflare?style=flat-square&label=license&labelColor=000000&color=666666)](LICENSE)
+[![github list: 22 repos](https://img.shields.io/badge/github_list-22_repos-ff0000?style=flat-square&labelColor=000000)](https://github.com/stars/avalonreset/lists/cto-legends)
 
 **Cloudflare DNS automation with reviewed changes and a reusable knowledge vault.**
 
@@ -144,7 +145,9 @@ See [compatibility and verification](docs/RELEASE-READINESS.md), [contributing](
 
 ---
 
+<p align="center"><a href="https://github.com/stars/avalonreset/lists/cto-legends"><img src="assets/collection-star-shrine.svg" width="100%" alt="GitHub Star List: The complete cto-legends collection on one page. Bookmark or star the router and every module from a single GitHub list."></a></p>
+
 **Specification & benchmarks on cto-legends.com:**
 - **Module specification & architecture matrix:** [cto-legends.com/modules/legends-cloudflare](https://cto-legends.com/modules/legends-cloudflare)
 - **Related engineering dispatches:** [Railway vs Render: Fly.io vs Self-Hosted Coolify PaaS](https://cto-legends.com/blog?post=railway-vs-render-fly-io-coolify-paas) · [Hetzner vs AWS & DigitalOcean: Cloud Server Planning](https://cto-legends.com/blog?post=hetzner-vs-aws-digitalocean-cloud-server-planning) · [How to Build AI Agents: Production CLI & MCP Routing](https://cto-legends.com/blog?post=how-to-build-ai-agents-cli-mcp-routing)
-- **Ecosystem hub:** [cto-legends.com/home](https://cto-legends.com/home)
+- **Ecosystem hub & 22-repo GitHub list:** [cto-legends.com/home](https://cto-legends.com/home) · [github.com/stars/avalonreset/lists/cto-legends](https://github.com/stars/avalonreset/lists/cto-legends) (browse or star all 22 repositories from one page)
