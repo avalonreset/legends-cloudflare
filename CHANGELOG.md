@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.1.4 - 2026-11-21
+
+- Add `scripts/render_cards.py` and the 7 outlined Legends Font `r1` SVG architecture, comparison, plain-english chain, handoff, CTA, and collection star shrine cards under `assets/cards/r1/`.
+- Upgrade `README.md` to the evergreen CTO Legends architecture and reference drawer standard with zero hardcoded version strings and collapsible `<details>` reference sections.
+- Include `.svg` assets in `setup.py` build-time wheel `_data/` mirroring and `MANIFEST.in` source distribution packaging, and remove the duplicate root `assets/collection-star-shrine.svg`.
+- Update release metadata, `CITATION.cff`, `docs/catalog-entry.candidate.json`, and 20-topic GitHub discovery metadata for `0.1.4`.
+
 ## 0.1.3 - 2026-11-11
 
 - Enforce ancestor-chain symlink refusal (`check_no_symlink_chain` with macOS `/var`, `/tmp`, `/etc` allowance), `<= 1 MB` (`1,048,576` bytes) `O_NOFOLLOW` bounded file reads, and duplicate-key-rejecting JSON parsing in `legends_cloudflare/resources.py` and `scripts/prepare_catalog.py`.
