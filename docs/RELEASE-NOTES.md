@@ -1,4 +1,4 @@
-# legends-cloudflare v0.1.4
+# legends-cloudflare v0.1.5
 
 Cloudflare DNS automation with reviewed changes and a reusable knowledge vault.
 

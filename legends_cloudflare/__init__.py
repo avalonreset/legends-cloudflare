@@ -1,3 +1,3 @@
 """Cloudflare DNS workflows for the CTO Legends ecosystem."""
 
-__version__ = "0.1.4"
+__version__ = "0.1.5"

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.5 - 2026-11-22
+
+- Sync vendored `cto-legends` router skill pin (`69ddc4f68faa`), enforce LF line endings via `.gitattributes`, and standardize release artifact checksums.
+
 ## 0.1.4 - 2026-11-21
 
 - Add `scripts/render_cards.py` and the 7 outlined Legends Font `r1` SVG architecture, comparison, plain-english chain, handoff, CTA, and collection star shrine cards under `assets/cards/r1/`.
