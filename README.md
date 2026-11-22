@@ -99,7 +99,7 @@ legends-cloudflare delete --zone example.com --name old --type A --record-id EXA
 <details>
 <summary><strong>Knowledge vault, DNS migration runbooks, and <code>legends-empire</code> integration</strong></summary>
 
-Start at [wiki/index.md](wiki/index.md) or attach the versioned knowledge pack at [knowledge/cloudflare/pack.json](knowledge/cloudflare/pack.json) (`legends.knowledge-pack/v1`). Open this repository folder in Obsidian or read it as plain Markdown.
+Start at [wiki/index.md](wiki/index.md) or attach the versioned knowledge pack at [knowledge/cloudflare/pack.json](knowledge/cloudflare/pack.json) (`legends.knowledge-pack/v1`). Attach into a [`legends-empire`](https://github.com/avalonreset/legends-empire) vault or read it directly as plain Markdown.
 
 - **Operational runbooks:** [Authentication & token scoping](wiki/authentication.md), [DNS operations & post-write checks](wiki/dns-operations.md), [DNS hosting migration & DNSSEC](wiki/migration.md), [Troubleshooting](wiki/troubleshooting.md), and the dated [source ledger](references/sources.md).
 - **Private operating templates:** Use the [Empire integration guide](docs/EMPIRE.md) with [templates/domain-inventory.md](templates/domain-inventory.md), [templates/change-receipt.md](templates/change-receipt.md), and [templates/incident-review.md](templates/incident-review.md) to keep private domain inventories, rollback snapshots, and cutover receipts in your own vault outside public repositories.
