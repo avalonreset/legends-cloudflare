@@ -16,6 +16,8 @@ readme = "README.md"
 legends-cloudflare = "legends_cloudflare.cli:main"
 
 [project.urls]
+Homepage = "https://cto-legends.com/modules/legends-cloudflare"
+Documentation = "https://cto-legends.com/modules/legends-cloudflare"
 Repository = "https://github.com/avalonreset/legends-cloudflare"
 Issues = "https://github.com/avalonreset/legends-cloudflare/issues"
 
